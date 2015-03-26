@@ -10,3 +10,7 @@
 /vendor/
 /bin/
 /composer.phar
+/nbproject/
+
+# Pour les fichiers de sauvegarde de symfony
+*.php~
