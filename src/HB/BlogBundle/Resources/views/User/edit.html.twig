@@ -1,0 +1,25 @@
+{% extends 'HBBlogBundle::layout.html.twig' %}
+
+{% block titre_content %} Edition d'un utilisateur {% endblock %}
+{% block content %}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+           Coordonnées personnelles
+       </div>
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-lg-6">
+                    {{ form(edit_form) }}
+                </div>
+            </div>
+        </div>
+        <ul class="record_actions">
+            <li>
+                <a href="{{ path('user') }}">
+                    Back to the list
+                </a>
+            </li>
+        </ul>
+        {{ form(delete_form) }}
+    </div>
+{% endblock %}

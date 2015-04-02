@@ -1,0 +1,9 @@
+    <div class="hero-unit">
+        <h1>{{ entity.title }}</h1>
+        <p>{{ entity.content | truncate(50,true,"...")}}</p>
+        <p>
+        <a href="{{ path("article_show", entity.id)}}" class="btn btn-primary btn-large">
+            Voir la suite
+        </a>
+        </p>
+    </div>

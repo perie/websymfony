@@ -33,6 +33,9 @@ class ArticleController extends Controller
 
         return array(
             'entities' => $entities,
+            'urlList' => array(array(
+                'url'=>"",'icon'=>"fa fa-book ",'name'=>"Article"
+                )),
         );
     }
     /**
@@ -47,10 +50,17 @@ class ArticleController extends Controller
         $entity = new Article();
         $form = $this->createCreateForm($entity);
         $form->handleRequest($request);
-
+//
+//        if ($this->getRequest()->isMethod('POST')) {
+//            $form->handleRequest($this->getRequest());
+//        }
+        
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
+            
+            $entity->getBanner()->upload();
             $em->persist($entity);
+            
             $em->flush();
 
             return $this->redirect($this->generateUrl('article_show', array('id' => $entity->getId())));
@@ -58,6 +68,7 @@ class ArticleController extends Controller
 
         return array(
             'entity' => $entity,
+            
             'form'   => $form->createView(),
         );
     }
@@ -93,8 +104,14 @@ class ArticleController extends Controller
         $entity = new Article();
         $form   = $this->createCreateForm($entity);
 
+        
         return array(
             'entity' => $entity,
+            'urlList' => array(
+                array('url'=>"article",'icon'=>"fa fa-book",'name'=>"Article"),
+                array('url'=>null,'icon'=>"ion-plus-round",'name'=>"Ajouter un article")
+                
+                ),
             'form'   => $form->createView(),
         );
     }
@@ -109,7 +126,7 @@ class ArticleController extends Controller
     public function showAction($id)
     {
         $em = $this->getDoctrine()->getManager();
-
+        $entity = new Article();
         $entity = $em->getRepository('HBBlogBundle:Article')->find($id);
 
         if (!$entity) {
@@ -120,6 +137,11 @@ class ArticleController extends Controller
 
         return array(
             'entity'      => $entity,
+            'urlList' => array(
+                array('url'=>"article",'icon'=>"fa fa-book",'name'=>"Article"),
+                array('url'=>null,'icon'=>"ion-ios-paper-outline",'name'=>$entity->getTitle()),
+                
+                ),
             'delete_form' => $deleteForm->createView(),
         );
     }
@@ -146,6 +168,11 @@ class ArticleController extends Controller
 
         return array(
             'entity'      => $entity,
+            'urlList' => array(
+                array('url'=>"article",'icon'=>"fa fa-book",'name'=>"Article"),
+                array('url'=>null,'icon'=>"ion-ios-paper-outline",'name'=>$entity->getTitle()."[Modification]"),
+                
+                ),
             'edit_form'   => $editForm->createView(),
             'delete_form' => $deleteForm->createView(),
         );
@@ -165,7 +192,7 @@ class ArticleController extends Controller
             'method' => 'PUT',
         ));
 
-        $form->add('submit', 'submit', array('label' => 'Update'));
+        $form->add('submit', 'submit', array('label' => 'Update'), 'attr');
 
         return $form;
     }
@@ -181,19 +208,25 @@ class ArticleController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         $entity = $em->getRepository('HBBlogBundle:Article')->find($id);
-
+            
         if (!$entity) {
             throw $this->createNotFoundException('Unable to find Article entity.');
         }
+        
+        // gérer la datetime de dernière édition
+        $entity->setLastEditDate(new \DateTime());
 
         $deleteForm = $this->createDeleteForm($id);
         $editForm = $this->createEditForm($entity);
         $editForm->handleRequest($request);
 
-        if ($editForm->isValid()) {
-            $em->flush();
+        //$entity->getBanner()->setUrl($editForm['attachment']->getData()->getClientOriginalName());
 
-            return $this->redirect($this->generateUrl('article_edit', array('id' => $id)));
+        if ($editForm->isValid()) {
+            $entity->getBanner()->upload();
+            $em->persist($entity);
+            $em->flush();
+            return $this->redirect($this->generateUrl('article_show', array('id' => $id)));
         }
 
         return array(
@@ -213,6 +246,7 @@ class ArticleController extends Controller
         $form = $this->createDeleteForm($id);
         $form->handleRequest($request);
 
+        echo "Hello";
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $entity = $em->getRepository('HBBlogBundle:Article')->find($id);
@@ -244,4 +278,6 @@ class ArticleController extends Controller
             ->getForm()
         ;
     }
+    
+
 }

@@ -1,0 +1,21 @@
+<nav class="navbar navbar-default ariane-field" role="navigation" style="margin-bottom: 0">
+    <ul class="nav navbar-top-links navbar-left">
+        <li><a href=""><i class="fa fa-home"></i>&nbsp;Accueil</a></li>
+        {% for url in urlList %}
+            <li><a>|</a></li>
+            <li>
+                {% if url.url != "" %}
+                    {% if (url.url is defined) %}
+                        <a href="{{ path(url.url) }}">
+                            {% if url.icon != "" %}<i class="{{url.icon}}"></i>{% endif %}
+                            &nbsp;{{ url.name }}
+                        </a>
+                    {% endif %}
+                {% else %}
+                    <span>{% if url.icon != "" %}<i class="{{url.icon}}"></i>{% endif %}
+                        &nbsp;{{ url.name }}</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+</nav>

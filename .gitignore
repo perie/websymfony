@@ -14,3 +14,7 @@
 
 # Pour les fichiers de sauvegarde de symfony
 *.php~
+/web/ressources/
+/web/fonts/
+/web/css/
+/web/js/

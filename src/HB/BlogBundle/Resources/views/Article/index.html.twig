@@ -1,53 +1,78 @@
-{% extends '::base.html.twig' %}
+{% extends 'HBBlogBundle::layout.html.twig' %}
 
-{% block body -%}
-    <h1>Article list</h1>
-
-    <table class="records_list">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Content</th>
-                <th>Creationdate</th>
-                <th>Lasteditdate</th>
-                <th>Publishdate</th>
-                <th>Published</th>
-                <th>Enabled</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for entity in entities %}
-            <tr>
-                <td><a href="{{ path('article_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
-                <td>{{ entity.title }}</td>
-                <td>{{ entity.content }}</td>
-                <td>{% if entity.creationDate %}{{ entity.creationDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if entity.lastEditDate %}{{ entity.lastEditDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{% if entity.publishDate %}{{ entity.publishDate|date('Y-m-d H:i:s') }}{% endif %}</td>
-                <td>{{ entity.published }}</td>
-                <td>{{ entity.enabled }}</td>
-                <td>
-                <ul>
-                    <li>
-                        <a href="{{ path('article_show', { 'id': entity.id }) }}">show</a>
-                    </li>
-                    <li>
-                        <a href="{{ path('article_edit', { 'id': entity.id }) }}">edit</a>
-                    </li>
-                </ul>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
+{% block titre_content %} Articles {% endblock %}
+{% block content -%}
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            Listes des articles
+        </div>
+        <div class="dataTable_wrapper">
+            <table class="table table-striped table-bordered table-hover" id="dataTables-example">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Titre</th>
+                        <th>Résumé</th>
+                        <th>Créé le</th>
+                        <th>Auteur</th>
+                        <th>Modifié le</th>
+                        <th>Publié le</th>
+                        <th>Activé</th>
+                        <th>   
+                            <a href="{{ path('article_new')}}" class="btn btn-social btn-adn btn-bg" title="Ajouter lun utilisateur">
+                                <i class="fa fa-plus "></i>Ajouter
+                            </a>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for entity in entities %}
+                    <tr>
+                        <td><a href="{{ path('article_show', { 'id': entity.id }) }}">{{ entity.id }}</a></td>
+                        <td>{{ entity.title }}</td>
+                        <td>{{ entity.content | truncate(50, true, '...') }}</td>
+                        <td class="center">{% if entity.creationDate %}{{ entity.creationDate|date('d/m/Y') }}{% endif %}</td>
+                        <td class="center">{% if entity.author.name is defined %}{{ entity.author.name }}{% endif %}</td>
+                        <td class="center">{% if entity.lastEditDate %}{{ entity.lastEditDate|date('d/m/Y') }}{% endif %}</td>
+                        <td class="center">{% if entity.publishDate %}{{ entity.publishDate|date('d/m/Y') }}{% endif %}</td>
+                        <td class="center"><input type="checkbox" {% if (entity.enabled == true) %}checked{% endif%}></td>
+                        <td>
+                        <ul class="list-inline">
+                            <li>
+                                <a href="{{ path('article_show', { 'id': entity.id }) }}" class="btn btn-block btn-social-icon btn-github" title="Visualiser l'article">
+                                    <i class="fa fa-eye"></i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="{{ path('article_edit', { 'id': entity.id }) }}" class="btn btn-block btn-social-icon btn-dropbox" title="Modifier l'article">
+                                    <i class="fa fa-edit"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
     </table>
+        
+    </div>
 
         <ul>
-        <li>
-            <a href="{{ path('article_new') }}">
-                Create a new entry
+        <li class="list-unstyled">
+            <a href="{{ path('article_new')}}" class="btn btn-social btn-reddit btn-bg" title="Ajouter un article">
+                <i class="fa fa-plus "></i>Ajouter un nouvel article
             </a>
         </li>
     </ul>
     {% endblock %}
+    
+    {% block javascripts %}
+        {{ parent() }}
+    <script>
+        $(document).ready(function() {
+            $('#dataTables-example').DataTable({
+                    responsive: true
+            });
+        });
+    </script>
+{% endblock %}

@@ -1,15 +1,17 @@
-{% extends '::base.html.twig' %}
+{% extends 'HBBlogBundle::layout.html.twig' %}
+    
+{% block titre_content %}&nbsp; Ajouter un article {% endblock %}
+{% block content -%}
 
-{% block body -%}
-    <h1>Article creation</h1>
-
-    {{ form(form) }}
-
+{% form_theme form 'HBBlogBundle:Article:form.html.twig' %}
+    <div class="row col-lg-6">
+        {{ form(form) }} 
         <ul class="record_actions">
-    <li>
-        <a href="{{ path('article') }}">
-            Back to the list
-        </a>
-    </li>
-</ul>
+            <li class="list-unstyled">
+                <a  class="btn btn-xs btn-group-lg btn-github"  href="{{ path('article') }}">
+                    <i class="ion-backspace" ></i>&nbsp;Retour à la liste
+                </a>
+            </li>
+        </ul>
+    </div>
 {% endblock %}

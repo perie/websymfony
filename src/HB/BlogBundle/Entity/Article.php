@@ -3,6 +3,7 @@
 namespace HB\BlogBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Article
@@ -25,6 +26,12 @@ class Article
      * @var string
      *
      * @ORM\Column(name="title", type="string", length=255)
+     * @Assert\Length(
+     *      min = "10",
+     *      max = "100",
+     *      minMessage = "Votre titre doit faire au moins {{ limit }} caractères",
+     *      maxMessage = "Votre titre ne peut pas être plus long que {{ limit }} caractères"
+     * )
      */
     private $title;
 
@@ -32,6 +39,10 @@ class Article
      * @var string
      *
      * @ORM\Column(name="content", type="text")
+     * @Assert\Length(
+     *      min = "10",
+     *      minMessage = "Votre titre doit faire au moins {{ limit }} caractères"
+     * )
      */
     private $content;
 
@@ -39,13 +50,15 @@ class Article
      * @var \DateTime
      *
      * @ORM\Column(name="creationDate", type="datetime")
+     * @Assert\DateTime(message = "La date de création n'est pas au format date")
      */
     private $creationDate;
 
     /**
      * @var \DateTime
      *
-     * @ORM\Column(name="lastEditDate", type="datetime")
+     * @ORM\Column(name="lastEditDate", type="datetime", nullable=true)
+     * @Assert\DateTime(message = "La date de modification n'est pas au format date")
      */
     private $lastEditDate;
 
@@ -53,6 +66,7 @@ class Article
      * @var \DateTime
      *
      * @ORM\Column(name="publishDate", type="datetime")
+     * @Assert\DateTime(message = "La date de publication n'est pas au format date")
      */
     private $publishDate;
 
@@ -60,6 +74,7 @@ class Article
      * @var boolean
      *
      * @ORM\Column(name="published", type="boolean")
+     * @Assert\Type(type="boolean", message="La valeur {{ value }} n'est pas un type {{ type }} valide.")
      */
     private $published;
 
@@ -67,11 +82,44 @@ class Article
      * @var boolean
      *
      * @ORM\Column(name="enabled", type="boolean")
+     * @Assert\Type(type="boolean", message="La valeur {{ value }} n'est pas un type {{ type }} valide.")
      */
     private $enabled;
-
-
+    
     /**
+     *
+     * @var User
+     * 
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="articles")
+     * @Assert\Valid()
+     */
+    private $author;
+    
+     /**
+     *
+     * @var Image
+     * 
+     * @ORM\OneToOne(targetEntity="Image", cascade="persist")
+     * @Assert\Valid()
+     */
+    private $banner;
+    
+     /**
+     *
+     * @var Comments[]
+     * 
+     * @ORM\OneToMany(targetEntity="Comment", mappedBy="article") 
+     */
+    private $comments;
+    
+    public function __construct() {
+        //  valeur par défaut (notamment pour le formulaire)
+        $this->creationDate = new \DateTime();
+        $this->publishDate = new \DateTime();
+        $this->enabled = true;
+    }
+
+        /**
      * Get id
      *
      * @return integer 
@@ -219,7 +267,6 @@ class Article
         return $this->published;
     }
 
-
     /**
      * Set enabled
      *
@@ -242,4 +289,101 @@ class Article
     {
         return $this->enabled;
     }
+
+    /**
+     * Set author
+     *
+     * @param \HB\BlogBundle\Entity\User $author
+     * @return Article
+     */
+    public function setAuthor(\HB\BlogBundle\Entity\User $author = null)
+    {
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Set author
+     *
+     * @param \HB\BlogBundle\Entity\User $author
+     * @return Article
+     */
+    public function setAuthorById(int $authorId)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $author = $em->getRepository('HBBlogBundle:User')->find($authorId);
+        $this->author = $author;
+
+        return $this;
+    }
+
+    /**
+     * Get author
+     *
+     * @return \HB\BlogBundle\Entity\User 
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * Add comments
+     *
+     * @param \HB\BlogBundle\Entity\Comment $comments
+     * @return Article
+     */
+    public function addComment(\HB\BlogBundle\Entity\Comment $comments)
+    {
+        $this->comments[] = $comments;
+
+        return $this;
+    }
+
+    /**
+     * Remove comments
+     *
+     * @param \HB\BlogBundle\Entity\Comment $comments
+     */
+    public function removeComment(\HB\BlogBundle\Entity\Comment $comments)
+    {
+        $this->comments->removeElement($comments);
+    }
+
+    /**
+     * Get comments
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getComments()
+    {
+        return $this->comments;
+    }
+
+    /**
+     * Set banner
+     *
+     * @param \HB\BlogBundle\Entity\Image $banner
+     * @return Article
+     */
+    public function setBanner(\HB\BlogBundle\Entity\Image $banner = null)
+    {
+        $this->banner = $banner;
+
+        return $this;
+    }
+
+    /**
+     * Get banner
+     *
+     * @return \HB\BlogBundle\Entity\Image 
+     */
+    public function getBanner()
+    {
+        return $this->banner;
+    }
+    
+
 }

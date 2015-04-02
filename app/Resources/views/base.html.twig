@@ -3,11 +3,76 @@
     <head>
         <meta charset="UTF-8" />
         <title>{% block title %}Welcome!{% endblock %}</title>
-        {% block stylesheets %}{% endblock %}
+        {% block stylesheets %}
+            
+        {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <link href="{{ asset('css/bootstrap.css')}}" rel="stylesheet">
+        <!-- Bootstrap Core CSS -->
+        <link href="{{ asset('/ressources/public/bootstrap/dist/css/bootstrap.min.css')}}" rel="stylesheet">
+        <!-- Bootstrap Social CSS -->
+        <link href="{{ asset('/ressources/public/bootstrap-social/bootstrap-social.css')}}" rel="stylesheet">
+        <!-- MetisMenu CSS -->
+        <link href="{{ asset('/ressources/public/metisMenu/dist/metisMenu.min.css')}}" rel="stylesheet">
+        <!-- Timeline CSS -->
+        <link href="{{ asset('/ressources/public/css/timeline.css')}}" rel="stylesheet">
+        <!-- DataTables CSS -->
+        <link href="{{ asset('/ressources/public/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.css')}}" rel="stylesheet">
+        <!-- DataTables Responsive CSS -->
+        <link href="{{ asset('/ressources/public/datatables-responsive/css/dataTables.responsive.css')}}" rel="stylesheet">
+        <!-- Custom CSS -->
+        <link href="{{ asset('/ressources/public/css/sb-admin-2.css')}}" rel="stylesheet">
+        <!-- Morris Charts CSS -->
+        <link href="{{ asset('/ressources/public/morrisjs/morris.css')}}" rel="stylesheet">
+        <!-- Custom Fonts -->
+        <link href="{{ asset('/ressources/public/font-awesome/css/font-awesome.min.css')}}" rel="stylesheet" type="text/css">
+        <!-- Icon Fonts -->
+        <link href="http://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css" rel="stylesheet" type="text/css">
     </head>
+    
     <body>
-        {% block body %}{% endblock %}
+        <div id="wrapper">
+            {% block menu %}{% include ':blocs:menu.html.twig' %}{% endblock %}
+            {% block filAriane %}{% include ':blocs:filAriane.html.twig' %}{% endblock %}
+            {#    <nav class="navbar navbar-default ariane-field" role="navigation" style="margin-bottom: 0">
+                    <ul class="nav navbar-top-links navbar-left">
+                        <li><a href=""><i class="fa fa-home"></i>&nbsp;Accueil</a></li>
+                        <li>|</li>
+                        <li><a href="">Utilisateur</a></li>
+                        <li>|</li>
+                        <li>&nbsp;Nouveau</li>
+                    </ul>
+                </nav>
+            #}
+            <div id="page-wrapper">
+                
+                {% block body %}
+
+                {% endblock %}
+            </div>
+        </div>
+            
+        
+        <script src="http://code.jquery.com/jquery.js"></script>
+        <script src="{{asset('js/bootstrap.js') }}"></script>
+        <!-- jQuery -->
+        <script src="{{asset('ressources/public/jquery/dist/jquery.min.js') }}"></script>
+        <!-- Bootstrap Core JavaScript -->
+        <script src="{{asset('ressources/public/bootstrap/dist/js/bootstrap.min.js') }}"></script>
+        <!-- Metis Menu Plugin JavaScript -->
+        <script src="{{asset('ressources/public/metisMenu/dist/metisMenu.min.js') }}"></script>
+        <!-- Morris Charts JavaScript -->
+        <script src="{{asset('ressources/public/raphael/raphael-min.js') }}"></script>
+        <script src="{{asset('ressources/public/morrisjs/morris.min.js') }}"></script>
+        <script src="{{asset('ressources/public/js/morris-data.js') }}"></script>
+        <!-- DataTables JavaScript -->
+        <script src="{{asset('ressources/public/DataTables/media/js/jquery.dataTables.min.js') }}"></script>
+        <script src="{{asset('ressources/public/datatables-plugins/integration/bootstrap/3/dataTables.bootstrap.min.js') }}"></script>
+        <!-- Custom Theme JavaScript -->
+        <script src="{{asset('ressources/public/js/sb-admin-2.js')}}"></script>
+        
         {% block javascripts %}{% endblock %}
     </body>
 </html>
+
+
